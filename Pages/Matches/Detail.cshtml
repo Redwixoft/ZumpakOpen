@@ -1,0 +1,88 @@
+@page
+@model ZumpakOpen.Pages.Matches.DetailModel
+@{
+    ViewData["Title"] = "Match";
+}
+
+<a asp-page="/Sessions/Detail" asp-route-id="@Model.SessionId" class="page-link-back text-muted d-inline-block mb-3">← Back to session</a>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Match #@Model.MatchNumber</h5>
+    <span class="badge bg-secondary">First to @Model.WinningThreshold pts</span>
+</div>
+
+<div id="winner-banner" class="winner-banner @(Model.IsFinished ? "" : "d-none")">
+    🏆 Winner: <span id="winner-name">@(Model.WinnerName ?? "")</span>
+</div>
+
+<div id="scores-container">
+    @foreach (var score in Model.Scores)
+    {
+        <div class="card mb-3 @(Model.IsFinished && score.ParticipantId == Model.WinnerId ? "border-success" : "")">
+            <div class="card-body py-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="player-name">@score.Name</span>
+                    <span class="player-points" id="score-@score.ParticipantId">@score.Points</span>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary btn-score flex-fill score-btn"
+                            data-participant-id="@score.ParticipantId"
+                            data-points="1"
+                            @(Model.IsFinished ? "disabled" : "")>
+                        +1
+                    </button>
+                    <button class="btn btn-danger btn-score flex-fill score-btn"
+                            data-participant-id="@score.ParticipantId"
+                            data-points="2"
+                            @(Model.IsFinished ? "disabled" : "")>
+                        +2
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+<script>
+    const matchId = @Model.MatchId;
+    document.querySelectorAll('.score-btn').forEach(btn => {
+        btn.addEventListener('click', async function () {
+            const participantId = this.dataset.participantId;
+            const points = parseInt(this.dataset.points);
+
+            document.querySelectorAll('.score-btn').forEach(b => b.disabled = true);
+
+            try {
+                const res = await fetch(`/api/matches/${matchId}/scores/${participantId}/add`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ points })
+                });
+
+                if (!res.ok) {
+                    document.querySelectorAll('.score-btn').forEach(b => b.disabled = false);
+                    return;
+                }
+
+                const data = await res.json();
+
+                data.scores.forEach(s => {
+                    const el = document.getElementById('score-' + s.participantId);
+                    if (el) el.textContent = s.points;
+                });
+
+                if (data.isFinished) {
+                    document.getElementById('winner-name').textContent = data.winnerName;
+                    document.getElementById('winner-banner').classList.remove('d-none');
+                    // keep all buttons disabled
+                } else {
+                    document.querySelectorAll('.score-btn').forEach(b => b.disabled = false);
+                }
+            } catch {
+                document.querySelectorAll('.score-btn').forEach(b => b.disabled = false);
+            }
+        });
+    });
+</script>
+}

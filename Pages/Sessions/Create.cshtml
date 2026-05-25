@@ -1,0 +1,51 @@
+@page
+@model ZumpakOpen.Pages.Sessions.CreateModel
+@{
+    ViewData["Title"] = "New session";
+}
+
+<a asp-page="/Index" class="page-link-back text-muted d-inline-block mb-3">← Back</a>
+<h4 class="mb-3">New session</h4>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+    <div class="mb-3">
+        <label asp-for="Input.Name" class="form-label">Session name</label>
+        <input asp-for="Input.Name" class="form-control form-control-lg" placeholder="e.g. Saturday game" />
+        <span asp-validation-for="Input.Name" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Input.Date" class="form-label">Date</label>
+        <input asp-for="Input.Date" type="date" class="form-control form-control-lg" />
+        <span asp-validation-for="Input.Date" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Participants</label>
+        <div id="participants-list">
+            <div class="input-group mb-2">
+                <input type="text" name="Input.ParticipantNames" class="form-control form-control-lg" placeholder="Player name" />
+            </div>
+            <div class="input-group mb-2">
+                <input type="text" name="Input.ParticipantNames" class="form-control form-control-lg" placeholder="Player name" />
+            </div>
+        </div>
+        <button type="button" class="btn btn-outline-secondary btn-sm mt-1" id="add-participant">+ Add player</button>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-lg w-100 mt-2">Create session</button>
+</form>
+
+@section Scripts {
+<script>
+    document.getElementById('add-participant').addEventListener('click', function () {
+        var div = document.createElement('div');
+        div.className = 'input-group mb-2';
+        div.innerHTML = '<input type="text" name="Input.ParticipantNames" class="form-control form-control-lg" placeholder="Player name" />';
+        document.getElementById('participants-list').appendChild(div);
+        div.querySelector('input').focus();
+    });
+</script>
+}

@@ -1,0 +1,34 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Sessions";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Petanque sessions</h4>
+    <a asp-page="/Sessions/Create" class="btn btn-success btn-sm px-3">+ New session</a>
+</div>
+
+@if (!Model.Sessions.Any())
+{
+    <div class="text-center text-muted py-5">
+        <p>No sessions yet.</p>
+        <a asp-page="/Sessions/Create" class="btn btn-success">Create first session</a>
+    </div>
+}
+else
+{
+    <div class="list-group">
+        @foreach (var session in Model.Sessions)
+        {
+            <a asp-page="/Sessions/Detail" asp-route-id="@session.Id"
+               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3">
+                <div>
+                    <div class="fw-semibold">@session.Name</div>
+                    <small class="text-muted">@session.Date.ToString("d. M. yyyy")</small>
+                </div>
+                <span class="badge bg-secondary rounded-pill">@session.MatchCount matches</span>
+            </a>
+        }
+    </div>
+}

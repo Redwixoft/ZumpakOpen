@@ -1,0 +1,23 @@
+@page
+@model ZumpakOpen.Pages.Matches.CreateModel
+@{
+    ViewData["Title"] = "New match";
+}
+
+<a asp-page="/Sessions/Detail" asp-route-id="@Model.SessionId" class="page-link-back text-muted d-inline-block mb-3">← Back to session</a>
+<h4 class="mb-3">New match</h4>
+
+<form method="post">
+    <input type="hidden" asp-for="SessionId" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+    <div class="mb-4">
+        <label asp-for="WinningThreshold" class="form-label">Points needed to win</label>
+        <input asp-for="WinningThreshold" type="number" min="1" max="100"
+               class="form-control form-control-lg" style="font-size: 2rem; text-align: center;" />
+        <div class="text-muted small mt-1">Standard petanque is 13 points.</div>
+        <span asp-validation-for="WinningThreshold" class="text-danger small"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-lg w-100">Start match</button>
+</form>
