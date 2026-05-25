@@ -27,9 +27,11 @@
         <div id="participants-list">
             <div class="input-group mb-2">
                 <input type="text" name="Input.ParticipantNames" class="form-control form-control-lg" placeholder="Player name" />
+                <button type="button" class="btn btn-outline-danger remove-participant" tabindex="-1">✕</button>
             </div>
             <div class="input-group mb-2">
                 <input type="text" name="Input.ParticipantNames" class="form-control form-control-lg" placeholder="Player name" />
+                <button type="button" class="btn btn-outline-danger remove-participant" tabindex="-1">✕</button>
             </div>
         </div>
         <button type="button" class="btn btn-outline-secondary btn-sm mt-1" id="add-participant">+ Add player</button>
@@ -40,11 +42,24 @@
 
 @section Scripts {
 <script>
+    function addRemoveListener(btn) {
+        btn.addEventListener('click', function () {
+            var list = document.getElementById('participants-list');
+            if (list.querySelectorAll('.input-group').length > 1) {
+                btn.closest('.input-group').remove();
+            }
+        });
+    }
+
+    document.querySelectorAll('.remove-participant').forEach(addRemoveListener);
+
     document.getElementById('add-participant').addEventListener('click', function () {
         var div = document.createElement('div');
         div.className = 'input-group mb-2';
-        div.innerHTML = '<input type="text" name="Input.ParticipantNames" class="form-control form-control-lg" placeholder="Player name" />';
+        div.innerHTML = '<input type="text" name="Input.ParticipantNames" class="form-control form-control-lg" placeholder="Player name" />'
+                      + '<button type="button" class="btn btn-outline-danger remove-participant" tabindex="-1">✕</button>';
         document.getElementById('participants-list').appendChild(div);
+        addRemoveListener(div.querySelector('.remove-participant'));
         div.querySelector('input').focus();
     });
 </script>

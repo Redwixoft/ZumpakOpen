@@ -40,6 +40,17 @@ public class DetailModel(AppDbContext db) : PageModel
         return Page();
     }
 
+    public async Task<IActionResult> OnPostDeleteAsync(int id)
+    {
+        var session = await db.Sessions.FindAsync(id);
+        if (session is not null)
+        {
+            db.Sessions.Remove(session);
+            await db.SaveChangesAsync();
+        }
+        return RedirectToPage("/Index");
+    }
+
     public record ParticipantRow(int Id, string Name, int Wins);
     public record MatchRow(int Id, int MatchNumber, int WinningThreshold, bool IsFinished, string? WinnerName);
 }

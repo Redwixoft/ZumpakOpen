@@ -13,7 +13,7 @@ public class CreateModel(AppDbContext db) : PageModel
 
     public void OnGet()
     {
-        Input.Date = DateTime.Today;
+        Input.Date = DateOnly.FromDateTime(DateTime.Today);
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -48,7 +48,7 @@ public class CreateModel(AppDbContext db) : PageModel
         public string Name { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Date is required.")]
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
 
         public string[]? ParticipantNames { get; set; }
     }

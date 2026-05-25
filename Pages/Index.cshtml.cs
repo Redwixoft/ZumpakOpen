@@ -16,5 +16,5 @@ public class IndexModel(AppDbContext db) : PageModel
             .ToListAsync();
     }
 
-    public record SessionSummary(int Id, string Name, DateTime Date, int MatchCount);
+    public record SessionSummary(int Id, string Name, DateOnly Date, int MatchCount);
 }
