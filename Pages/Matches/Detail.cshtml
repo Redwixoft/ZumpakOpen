@@ -24,7 +24,7 @@
                     <span class="player-name">@score.Name</span>
                     <span class="player-points" id="score-@score.ParticipantId">@score.Points</span>
                 </div>
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 align-items-center">
                     <button class="btn btn-primary btn-score flex-fill score-btn"
                             data-participant-id="@score.ParticipantId"
                             data-points="1"
@@ -36,6 +36,13 @@
                             data-points="2"
                             @(Model.IsFinished ? "disabled" : "")>
                         +2
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary score-btn"
+                            data-participant-id="@score.ParticipantId"
+                            data-points="-1"
+                            style="min-width:40px;"
+                            @(Model.IsFinished ? "disabled" : "")>
+                        −1
                     </button>
                 </div>
             </div>

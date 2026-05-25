@@ -34,8 +34,8 @@ app.MapPost("/api/matches/{matchId}/scores/{participantId}/add", async (
     PointsRequest req,
     AppDbContext db) =>
 {
-    if (req.Points != 1 && req.Points != 2)
-        return Results.BadRequest("Points must be 1 or 2.");
+    if (req.Points != 1 && req.Points != 2 && req.Points != -1)
+        return Results.BadRequest("Points must be -1, 1 or 2.");
 
     var match = await db.Matches
         .Include(m => m.PlayerScores)
@@ -48,7 +48,7 @@ app.MapPost("/api/matches/{matchId}/scores/{participantId}/add", async (
     var score = match.PlayerScores.FirstOrDefault(ps => ps.ParticipantId == participantId);
     if (score is null) return Results.NotFound();
 
-    score.Points += req.Points;
+    score.Points = Math.Max(0, score.Points + req.Points);
 
     if (score.Points >= match.WinningThreshold)
     {
